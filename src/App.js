@@ -6,9 +6,7 @@ import { useEffect } from 'react'
 import Person from './components/Person'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '123-123456' }
-    ])
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
