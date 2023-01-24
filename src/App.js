@@ -4,12 +4,18 @@ import Filter from './components/Filter'
 import numberService from './services/numbers'
 import { useEffect } from 'react'
 import Person from './components/Person'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
-    const [persons, setPersons] = useState([])
+    const [persons, setPersons] = useState([
+        { name: 'Arto Hellas', number: '123-123456' }
+    ])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+    const [message, setMessage] = useState()
+    let messageCategory = ''
 
     useEffect(() => {
         numberService
@@ -55,6 +61,10 @@ const App = () => {
 
         setNewName('')
         setNewNumber('')
+
+        setMessage(`Added ${newName}`)
+        messageCategory = 'success'
+        setTimeout(() => setMessage(''), 5000)
     }
 
     const deletePerson = (id, name) => {
@@ -63,6 +73,14 @@ const App = () => {
                 .deleteEntity(id)
                 .then((response) => {
                     setPersons(persons.filter(person => person.id !== id))
+                })
+                .catch(error => {
+                    setMessage(`Information of ${name} has already been deleted from server`)
+                    setTimeout(() => {
+                        setMessage(null)
+                    }, 5000)
+                    setPersons(persons.filter(person => person.id !== id))
+                    messageCategory = 'error'
                 })
         }
 
@@ -85,6 +103,9 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <div>
+                <Notification className={messageCategory} message={message} />
+            </div>
             <div>
                 <Filter text='filter shown with' inputValue={filter} inputOnChange={handleFilterChange} />
             </div>
