@@ -1,5 +1,5 @@
 
-const Countries = ({ countriesToShow }) => {
+const Countries = ({ countriesToShow, showCountry }) => {
     if (!countriesToShow)
         return
     if (countriesToShow.length > 10) {
