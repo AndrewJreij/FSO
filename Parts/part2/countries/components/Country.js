@@ -21,8 +21,6 @@ const Country = ({ country }) => {
     const wind = weather.wind['speed']
     const icon = weather.weather[0]['icon']
 
-    console.log(icon)
-
     return (
         <>
             {console.log(weather)}
@@ -39,7 +37,7 @@ const Country = ({ country }) => {
             <h2>Weather</h2>
             <div>
                 <div>
-                    temperature {{ temperature }.toNumber() - 32} Celcius
+                    temperature {(parseInt(temperature) - 273)} Celcius
                 </div>
                 <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} alt='weather icon'></img>
                 <div>
