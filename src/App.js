@@ -1,70 +1,59 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Country from './components/Country'
+import CountryList from './components/CountryList';
+
+const MAX_COUNTRY_RESULTS = 10;
+const ResultsWarning = () => <p>Too many matches, specify another filter</p>;
 
 const App = () => {
-    const [countries, setCountries] = useState([])
-    const [filter, setFilter] = useState('')
-    const [countriesToShow, setCountriesToShow] = useState([])
+    const [countries, setCountries] = useState();
+    const [filter, setFilter] = useState('');
+    const [filteredCountries, setFilteredCountries] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState();
+    const [fetchCountriesError, setFetchCountriesError] = useState();
+
+    const isCountryListVisible = filteredCountries.length < MAX_COUNTRY_RESULTS;
 
     useEffect(() => {
         axios
             .get('https://restcountries.com/v3.1/all')
-            .then(response =>
-                setCountries(response.data))
+            .then(({ data }) => setCountries(data))
+            .catch(err => setFetchCountriesError(err));
     }, [])
 
-    if (!countries) {
-        return null
-    }
+    useEffect(() => {
+        if (filter === '') return setFilteredCountries([]);
+
+        setFilteredCountries(countries.filter(country => country.name.common.toLowerCase().includes(filter)));
+    }, [filter, countries])
 
     const handleFilterChange = (event) => {
-        console.log(event.target.value)
         setFilter(event.target.value)
-
-        if (event.target.value !== '') {
-            setCountriesToShow(countries.filter(country => country.name.common.toLowerCase().includes(filter)))
-        } else {
-            setCountriesToShow([])
-        }
     }
 
-    const showCountry = (name) => {
-        setCountriesToShow(countries.filter(country => country.name.common === name))
-        setFilter('')
+    const handleShowCountryClicked = (country) => {
+        setSelectedCountry(country);
     }
 
-    if (countriesToShow.length === 1) {
-        const country = countriesToShow[0]
-        return (
-            <div>
-                <div>
-                    <input onChange={handleFilterChange}></input>
-                </div>
-                <Country country={country} />
-            </div >
-        )
+    if (!countries) {
+        return <div>Loading</div>
     }
+
+    if (fetchCountriesError)
+        return <div>Error fetching countries</div>
 
     return (
         <div>
             <div>
-                <input onChange={handleFilterChange}></input>
+                <input onChange={handleFilterChange} value={filter}></input>
             </div>
             <div>
-                {countriesToShow.length > 10
-                    ? <p>Too many matches, specify another filter</p>
-                    : <ul>
-                        {
-                            countriesToShow.map(country =>
-                                <li key={country.name.common}>
-                                    {country.name.common}
-                                    <button onClick={() => showCountry(country.name.common)}>Show Country</button>
-                                </li>
-                            )
-                        }
-                    </ul>
+                {isCountryListVisible
+                    ? <CountryList data={filteredCountries} onClickShowCountry={handleShowCountryClicked} />
+                    : <ResultsWarning />
                 }
+                {selectedCountry && <Country country={selectedCountry} />}
             </div>
         </div>
     )
