@@ -51,21 +51,30 @@ const App = () => {
                     .then(response => {
                         setPersons(persons.map(person => person.id !== changedPerson.id ? person : response))
                     })
+                    .catch(error => {
+                        setMessage(error.response.data.error)
+                        messageCategory = 'error'
+                        setTimeout(() => setMessage(''), 5000)
+                    })
             }
         } else {
             numberService
                 .create(newPerson)
                 .then(response => {
                     setPersons(persons.concat(response))
+
+                    setMessage(`Added ${newName}`)
+                    messageCategory = 'success'
+                    setTimeout(() => setMessage(''), 5000)
+                })
+                .catch(error => {
+                    setMessage(error.response.data.error)
+                    messageCategory = 'error'
+                    setTimeout(() => setMessage(''), 5000)
                 })
         }
-
         setNewName('')
         setNewNumber('')
-
-        setMessage(`Added ${newName}`)
-        messageCategory = 'success'
-        setTimeout(() => setMessage(''), 5000)
     }
 
     const deletePerson = (id, name) => {
