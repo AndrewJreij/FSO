@@ -7,7 +7,6 @@ import Person from './components/Person'
 import Notification from './components/Notification'
 import './index.css'
 
-//activity log 
 const App = () => {
     const [persons, setPersons] = useState([
         { name: 'Arto Hellas', number: '123-123456' }
