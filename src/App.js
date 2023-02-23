@@ -1,141 +1,54 @@
 import { useState } from 'react'
-import PersonForm from './components/PersonForm'
-import Filter from './components/Filter'
-import numberService from './services/numbers'
-import { useEffect } from 'react'
-import Person from './components/Person'
-import Notification from './components/Notification'
-import './index.css'
 
-//activity log 
+const Header = (props) => <h1>{props.text}</h1>
+
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '123-123456' }
-    ])
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-    const [filter, setFilter] = useState('')
-    const [message, setMessage] = useState()
-    let messageCategory = ''
+    const anecdotes = [
+        'If it hurts, do it more often.',
+        'Adding manpower to a late software project makes it later!',
+        'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+        'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+        'Premature optimization is the root of all evil.',
+        'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+        'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+        'The only way to go fast, is to go well.'
+    ]
 
-    useEffect(() => {
-        numberService
-            .getAll()
-            .then(response => {
-                setPersons(response)
-            })
-    }, [])
+    const [selected, setSelected] = useState(0)
+    const [score, setScore] = useState(new Array(anecdotes.length).fill(0))
 
-    const peopleToShow = filter !== ''
-        ? persons.filter(person => person.name.toLowerCase().includes(filter))
-        : persons
+    console.log(score)
 
-    const addPerson = (event) => {
-        event.preventDefault()
+    const handleVote = () => {
+        const copy = [...score]
+        copy[selected] += 1
 
-        const newPerson = {
-            name: newName,
-            number: newNumber
-        }
-
-        const existingPerson = persons.some((person) => person.name === newName)
-
-        if (existingPerson) {
-
-            const person = persons.find(p => p.name === newName)
-            const changedPerson = { ...person, number: newNumber }
-
-            if (window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)) {
-                numberService
-                    .update(changedPerson)
-                    .then(response => {
-                        setPersons(persons.map(person => person.id !== changedPerson.id ? person : response))
-                    })
-                    .catch(error => {
-                        setMessage(error.response.data.error)
-                        messageCategory = 'error'
-                        setTimeout(() => setMessage(''), 5000)
-                    })
-            }
-        } else {
-            numberService
-                .create(newPerson)
-                .then(response => {
-                    setPersons(persons.concat(response))
-
-                    setMessage(`Added ${newName}`)
-                    messageCategory = 'success'
-                    setTimeout(() => setMessage(''), 5000)
-                })
-                .catch(error => {
-                    setMessage(error.response.data.error)
-                    messageCategory = 'error'
-                    setTimeout(() => setMessage(''), 5000)
-                })
-        }
-        setNewName('')
-        setNewNumber('')
+        setScore(copy)
     }
 
-    const deletePerson = (id, name) => {
-        if (window.confirm(`Delete ${name}?`)) {
-            numberService
-                .deleteEntity(id)
-                .then((response) => {
-                    setPersons(persons.filter(person => person.id !== id))
-                })
-                .catch(error => {
-                    setMessage(`Information of ${name} has already been deleted from server`)
-                    setTimeout(() => {
-                        setMessage(null)
-                    }, 5000)
-                    setPersons(persons.filter(person => person.id !== id))
-                    messageCategory = 'error'
-                })
-        }
-
-    }
-
-    const handleNameChange = (event) => {
-        console.log(event.target.value)
-        setNewName(event.target.value)
-    }
-
-    const handleNumberChange = (event) => {
-        console.log(event.target.value)
-        setNewNumber(event.target.value)
-    }
-
-    const handleFilterChange = (event) => {
-        setFilter(event.target.value)
-    }
+    let i = score.indexOf(Math.max(...score));
 
     return (
-        <div>
-            <h2>Phonebook</h2>
+        <>
+            <Header text='Anecdote of the day' />
             <div>
-                <Notification className={messageCategory} message={message} />
+                {anecdotes[selected]}
             </div>
             <div>
-                <Filter text='filter shown with' inputValue={filter} inputOnChange={handleFilterChange} />
+                has {score[selected]} votes
             </div>
-            <h2>Add new</h2>
-            <PersonForm onSubmit={addPerson} nameValue={newName} onNameChange={handleNameChange}
-                numberValue={newNumber} onNumberChange={handleNumberChange} />
-            <h2>Numbers</h2>
             <div>
-                <ul>
-                    {peopleToShow.map(person =>
-                        <Person
-                            key={person.id}
-                            person={person}
-                            onDelete={() => deletePerson(person.id, person.name)
-                            }
-                        />
-                    )}
-                </ul>
+                <button onClick={handleVote}>vote</button>
+                <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next</button>
             </div>
-        </div>
+            <Header text='Anecdote with most votes' />
+            <div>
+                {anecdotes[i]}
+            </div>
+            <div>
+                has {score[i]} votes
+            </div>
+        </>
     )
 }
 
