@@ -1,3 +1,0 @@
-($env:REACT_APP_API_KEY="987ba40ee8a1826e2940e56250a2cb12") -and (npm start) 
-
-https://openweathermap.org/current
