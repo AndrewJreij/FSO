@@ -15,19 +15,5 @@
       "number": "123",
       "id": 5
     }
-  ],
-  "notes": [
-    {
-      "content": "1",
-      "date": "2023-01-22T16:42:20.716Z",
-      "important": false,
-      "id": 1
-    },
-    {
-      "content": "2",
-      "date": "2023-01-22T17:26:45.058Z",
-      "important": false,
-      "id": 2
-    }
   ]
 }
