@@ -15,6 +15,7 @@ const App = () => {
   const [url, setUrl] = useState('')
 
   const [message, setMessage] = useState('')
+  const [messageClass, setMessageClass] = useState('')
 
 
   useEffect(() => {
@@ -41,12 +42,15 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
 
+      setMessageClass('success')
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
       setUser(user)
       blogService.setToken(user.token)
       setUsername('')
       setPassword('')
     } catch (error) {
+
+      setMessageClass('error')
       setMessage(error.response.data.error)
       setTimeout(() => setMessage(null), 5000)
     }
@@ -64,16 +68,16 @@ const App = () => {
 
     try {
       const newBlog = await blogService.create({ title, author, url })
-      blogs.concat(newBlog)
-
+      setBlogs(blogs.concat(newBlog))
       setTitle('')
       setAuthor('')
       setUrl('')
 
-      setTimeout(() => setMessage(`new blog ${newBlog.title} by ${newBlog.author} added`), 5000)
-
-
+      setMessageClass('success')
+      setMessage(`new blog ${newBlog.title} by ${newBlog.author} added`)
+      setTimeout(() => setMessage(null), 5000)
     } catch (error) {
+      setMessageClass('error')
       setMessage(error.response.data.error)
       setTimeout(() => setMessage(null), 5000)
     }
@@ -83,7 +87,7 @@ const App = () => {
     return (
       <>
         <h1>Login to application</h1>
-        <Notification message={message} />
+        <Notification message={message} className={messageClass} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -113,7 +117,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      {message}
+      <Notification message={message} className={messageClass} />
 
       <div>
         {user.name} is logged in
