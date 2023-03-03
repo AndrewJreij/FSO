@@ -36,6 +36,9 @@ const Blog = ({ blog }) => {
         <div>
           {blog.author}
         </div>
+        <div>
+          {blog.user.name}
+        </div>
       </div>
     </div>
   )

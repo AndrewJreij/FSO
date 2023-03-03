@@ -64,6 +64,8 @@ const App = () => {
     const handleNewBlog = async (blog) => {
         try {
             const newBlog = await blogService.create(blog)
+            //set user manually to show user in new blog without refreshing page, exercise 5.8
+            newBlog.user = user
             setBlogs(blogs.concat(newBlog))
 
             setMessageClass('success')
