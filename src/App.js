@@ -78,6 +78,43 @@ const App = () => {
         }
     }
 
+    const handleLike = async (blog) => {
+        try {
+            blog.likes += 1
+
+            const returnedBlog = await blogService.update(blog)
+            returnedBlog.user = user
+            setBlogs(blogs.map(n => n.id !== returnedBlog.id ? n : returnedBlog))
+
+        } catch (error) {
+            setMessageClass('error')
+            setMessage(error.response.data.error)
+            setTimeout(() => setMessage(null), 5000)
+        }
+    }
+
+    const handleDeleteBlog = async (blog) => {
+        if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+            try {
+                await blogService.deleteBlog(blog.id)
+                const newBlogs = blogs.filter(n => n.id !== blog.id)
+                setBlogs(newBlogs)
+            }
+            catch (error) {
+                setMessageClass('error')
+                setMessage(error.response.data.error)
+                setTimeout(() => setMessage(null), 5000)
+            }
+        }
+    }
+
+    const sortByLikes = (event) => {
+        event.preventDefault()
+        let sortedBlogs = [...blogs]
+        sortedBlogs.sort((a, b) => a.likes - b.likes)
+        setBlogs(sortedBlogs);
+    }
+
     if (!user) {
         return (
             <>
@@ -126,9 +163,13 @@ const App = () => {
                 </Togglable>
             </div>
 
+            <div>
+                <button onClick={sortByLikes}>sort</button>
+            </div>
+
 
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} />
+                <Blog key={blog.id} blog={blog} handleLikeBlog={() => handleLike(blog)} handleDelete={() => handleDeleteBlog(blog)} />
             )}
         </div>
     )
