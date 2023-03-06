@@ -112,7 +112,7 @@ const App = () => {
         event.preventDefault()
         let sortedBlogs = [...blogs]
         sortedBlogs.sort((a, b) => a.likes - b.likes)
-        setBlogs(sortedBlogs);
+        setBlogs(sortedBlogs)
     }
 
     if (!user) {
