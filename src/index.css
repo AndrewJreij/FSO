@@ -3,12 +3,6 @@
     font-style: italic;
 }
 
-.note {
-    color: grey;
-    padding-top: 5px;
-    font-size: 15px;
-}
-
 .error {
     color: red;
     background: lightgray;
@@ -18,6 +12,12 @@
     padding: 10px;
     margin-bottom: 10px;
 } */
+
+.note {
+    color: grey;
+    padding-top: 5px;
+    font-size: 15px;
+}
 
 .success {
     color: green;
