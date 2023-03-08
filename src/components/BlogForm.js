@@ -59,7 +59,7 @@ const BlogForm = ({ handleNewBlog }) => {
     )
 }
 
-BlogForm.PropTypes = {
+BlogForm.propTypes = {
     handleNewBlog: PropTypes.func.isRequired
 }
 
