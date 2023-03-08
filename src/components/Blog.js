@@ -25,11 +25,11 @@ const Blog = ({ blog, handleLikeBlog, handleDelete }) => {
         <button style={hideWhenDetails} onClick={toggleDetails}>view</button>
         <button style={showWhenDetails} onClick={toggleDetails}>hide</button>
       </div>
-      <div style={showWhenDetails}>
-        <div>
+      <div style={showWhenDetails} className="togglableContent">
+        <div className="blogURL">
           {blog.url}
         </div>
-        <div>
+        <div className="blogLikes">
           likes {blog.likes}
           <button onClick={handleLikeBlog}>like</button>
         </div>
