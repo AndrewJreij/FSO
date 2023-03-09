@@ -1,12 +1,12 @@
 import '../index.css'
 
 const Notification = ({ message, className }) => {
-    if (message === null) {
+    if (!message) {
         return null
     }
 
     return (
-        <div className={className}>
+        <div className='error'>
             {message}
         </div>
     )

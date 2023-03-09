@@ -72,7 +72,7 @@ const App = () => {
     }
 
     const addNote = (noteObject) => {
-        noteFormRef.current.toggleVsibility()
+        noteFormRef.current.toggleVisibility()
         noteService
             .create(noteObject)
             .then(returnedNote => {
@@ -152,7 +152,7 @@ const App = () => {
                 </button>
             </div>
             <ul>
-                {notesToShow.map(note =>
+                {notesToShow?.map(note =>
                     <Note
                         key={note.id}
                         note={note}
