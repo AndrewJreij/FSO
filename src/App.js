@@ -72,7 +72,7 @@ const App = () => {
     }
 
     const addNote = (noteObject) => {
-        noteFormRef.current.toggleVsibility()
+        noteFormRef.current.toggleVisibility()
         noteService
             .create(noteObject)
             .then(returnedNote => {
