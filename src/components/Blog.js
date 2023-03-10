@@ -21,7 +21,7 @@ const Blog = ({ blog, handleLikeBlog, handleDelete, CurrentUser }) => {
   const isCurrentUserCreator = CurrentUser.name === blog.user.name
 
   return (
-    <div style={blogStyle}>
+    <li style={blogStyle} className="blog">
       <div>
         {blog.title} {blog.author} {showDetails}
         <button style={hideWhenDetails} onClick={toggleDetails}>view</button>
@@ -33,7 +33,7 @@ const Blog = ({ blog, handleLikeBlog, handleDelete, CurrentUser }) => {
         </div>
         <div className="blogLikes">
           likes {blog.likes}
-          <button onClick={handleLikeBlog}>like</button>
+          <button className="likeButton" onClick={handleLikeBlog}>like</button>
         </div>
         <div>
           {blog.author}
@@ -46,7 +46,7 @@ const Blog = ({ blog, handleLikeBlog, handleDelete, CurrentUser }) => {
             <button onClick={handleDelete}>remove</button>
           </div>}
       </div>
-    </div>
+    </li>
   )
 }
 

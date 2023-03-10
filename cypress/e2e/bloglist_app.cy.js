@@ -6,8 +6,6 @@ describe('Blog app', () => {
     cy.request('POST', `${Cypress.env('BACKEND')}/users`, {
       username: 'root', password: 'password', name: 'TestUser'
     })
-
-    cy.visit('')
   })
 
   it('Login form is shown', () => {
@@ -59,8 +57,6 @@ describe('Blog app', () => {
         })
 
         it('A blog can be liked', function () {
-
-
           cy.contains('title author')
             .contains('view')
             .click()
@@ -70,9 +66,74 @@ describe('Blog app', () => {
           cy.contains('likes')
             .contains('1')
         })
+
+        it('A blog can be deleted', function () {
+          cy.contains('title author')
+            .contains('view')
+            .click()
+
+          cy.contains('remove').click()
+
+          cy.contains('title author').should('not.exist')
+        })
+
+        it('Another user cannot see the remove button', function () {
+          cy.request('POST', `${Cypress.env('BACKEND')}/users`, {
+            username: 'OtherUser', password: 'password', name: 'OtherTestUser'
+          })
+
+          cy.login({ username: 'OtherUser', password: 'password' })
+
+          cy.contains('title author')
+            .contains('view')
+            .click()
+
+          cy.contains('remove').should('not.exist')
+        })
+
+        describe('and several blogs exist', function () {
+          beforeEach(function () {
+            cy.login({ username: 'root', password: 'password' })
+            cy.createBlog(
+              { title: 'Blog with the least likes', author: 'author', url: 'url' }
+            )
+            cy.createBlog(
+              { title: 'Blog with the most likes', author: 'author', url: 'url' }
+            )
+          })
+
+          it('the sort buttons orders with most likes first', function () {
+
+            cy.contains('Blog with the most likes')
+              .contains('view')
+              .click()
+
+            cy.contains('Blog with the most likes')
+              .parent()
+              .find('.likeButton')
+              .click()
+              .click()
+
+            cy.contains('title author')
+              .contains('view')
+              .click()
+
+            cy.contains('title author')
+              .parent()
+              .find('.likeButton')
+              .click()
+
+            cy.wait(1000)
+            cy.contains('sort').click()
+
+            cy.get('.blog').eq(0).should('contain', 'Blog with the most likes')
+            cy.get('.blog').eq(1).should('contain', 'title author')
+            cy.get('.blog').eq(2).should('contain', 'Blog with the least likes')
+
+          })
+        })
+
       })
-
-
     })
   })
 })

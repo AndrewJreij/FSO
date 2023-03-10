@@ -111,7 +111,7 @@ const App = () => {
     const sortByLikes = (event) => {
         event.preventDefault()
         let sortedBlogs = [...blogs]
-        sortedBlogs.sort((a, b) => a.likes - b.likes)
+        sortedBlogs.sort((a, b) => b.likes - a.likes)
         setBlogs(sortedBlogs)
     }
 
@@ -169,10 +169,11 @@ const App = () => {
                 <button onClick={sortByLikes}>sort</button>
             </div>
 
-
-            {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} handleLikeBlog={() => handleLike(blog)} handleDelete={() => handleDeleteBlog(blog)} CurrentUser={user} />
-            )}
+            <ul>
+                {blogs.map(blog =>
+                    <Blog key={blog.id} blog={blog} handleLikeBlog={() => handleLike(blog)} handleDelete={() => handleDeleteBlog(blog)} CurrentUser={user} />
+                )}
+            </ul>
         </div>
     )
 }
