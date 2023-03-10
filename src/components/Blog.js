@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, handleLikeBlog, handleDelete }) => {
+const Blog = ({ blog, handleLikeBlog, handleDelete, CurrentUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -18,6 +18,8 @@ const Blog = ({ blog, handleLikeBlog, handleDelete }) => {
   const hideWhenDetails = { display: showDetails ? 'none' : '' }
   const showWhenDetails = { display: showDetails ? '' : 'none' }
 
+  const isCurrentUserCreator = CurrentUser.name === blog.user.name
+
   return (
     <div style={blogStyle}>
       <div>
@@ -25,11 +27,11 @@ const Blog = ({ blog, handleLikeBlog, handleDelete }) => {
         <button style={hideWhenDetails} onClick={toggleDetails}>view</button>
         <button style={showWhenDetails} onClick={toggleDetails}>hide</button>
       </div>
-      <div style={showWhenDetails} className="togglableContent">
-        <div className="blogURL">
+      <div style={showWhenDetails}>
+        <div>
           {blog.url}
         </div>
-        <div className="blogLikes">
+        <div>
           likes {blog.likes}
           <button onClick={handleLikeBlog}>like</button>
         </div>
@@ -39,9 +41,10 @@ const Blog = ({ blog, handleLikeBlog, handleDelete }) => {
         <div>
           {blog.user.name}
         </div>
-        <div>
-          <button onClick={handleDelete}>remove</button>
-        </div>
+        {isCurrentUserCreator &&
+          <div>
+            <button onClick={handleDelete}>remove</button>
+          </div>}
       </div>
     </div>
   )
